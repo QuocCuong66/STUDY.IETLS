@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS Speaking - Canvas Chubby World</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        :root {
+            --primary: #FF6B6B;
+            --secondary: #4ECDC4;
+            --accent: #FFE66D;
+            --purple: #A29BFE;
+            --text-dark: #2d3436;
+            --text-light: #636e72;
+            --glass-bg: rgba(255, 255, 255, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.8);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            color: var(--text-dark);
+            overflow-x: hidden;
+            background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #ffd1ff, #a1c4fd, #c2e9fb);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            cursor: pointer;
+        }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        #animal-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        header {
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--primary), #FF8E53);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 20px;
+            line-height: 1.1;
+            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.1));
+        }
+        
+        p.subtitle {
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            font-weight: 600;
+            margin-bottom: 50px;
+            max-width: 700px;
+            background: var(--glass-bg);
+            padding: 20px 30px;
+            border-radius: 30px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .btn-cute {
+            padding: 15px 50px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border: none;
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
+        }
+        .btn-cute:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 20px 30px rgba(255, 107, 107, 0.5);
+        }
+        
+        /* SECTION CONTAINERS */
+        .lessons-section { 
+            padding: 50px 0 100px 0; 
+        }
+        
+        .section-container {
+            margin-bottom: 80px;
+            padding: 40px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border-radius: 40px;
+            border: 3px solid var(--glass-border);
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            display: inline-block;
+            padding: 15px 35px;
+            border-radius: 25px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            font-weight: 600;
+        }
+        
+        /* Màu cho từng section */
+        .section-1 .section-title { 
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+            color: white;
+        }
+        .section-2 .section-title { 
+            background: linear-gradient(135deg, #4ECDC4, #44A08D);
+            color: white;
+        }
+        .section-3 .section-title { 
+            background: linear-gradient(135deg, #A29BFE, #6C5CE7);
+            color: white;
+        }
+        .section-4 .section-title { 
+            background: linear-gradient(135deg, #FFE66D, #FFA502);
+            color: white;
+        }
+        
+        .lessons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        
+        .lesson-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px) saturate(150%);
+            border: 3px solid var(--glass-border);
+            border-radius: 35px;
+            padding: 35px;
+            height: 350px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        
+        .lesson-card:hover {
+            transform: translateY(-15px) scale(1.03);
+            background: rgba(255, 255, 255, 0.7);
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.15);
+        }
+        
+        .section-1 .lesson-card:hover { border-color: #FF6B6B; }
+        .section-2 .lesson-card:hover { border-color: #4ECDC4; }
+        .section-3 .lesson-card:hover { border-color: #A29BFE; }
+        .section-4 .lesson-card:hover { border-color: #FFE66D; }
+        
+        .lesson-number {
+            font-size: 5rem;
+            font-weight: 800;
+            color: rgba(255,255,255,0.5);
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            z-index: 0;
+            -webkit-text-stroke: 2px currentColor;
+            opacity: 0.3;
+        }
+        
+        .section-1 .lesson-number { color: #FF6B6B; }
+        .section-2 .lesson-number { color: #4ECDC4; }
+        .section-3 .lesson-number { color: #A29BFE; }
+        .section-4 .lesson-number { color: #FFE66D; }
+        
+        .card-content {
+            position: relative;
+            z-index: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        
+        .lesson-tag {
+            color: white;
+            padding: 8px 15px;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .section-1 .lesson-tag { background: #FF6B6B; }
+        .section-2 .lesson-tag { background: #4ECDC4; }
+        .section-3 .lesson-tag { background: #A29BFE; }
+        .section-4 .lesson-tag { background: #FFE66D; color: #2d3436; }
+        
+        .lesson-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            line-height: 1.3;
+        }
+        
+        .lesson-icon {
+            font-size: 3rem;
+            margin-bottom: auto;
+            align-self: flex-start;
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1));
+        }
+        
+        /* MODAL */
+        .lesson-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(25px);
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s;
+        }
+        .lesson-overlay.active { opacity: 1; pointer-events: all; }
+        
+        .overlay-content {
+            width: 85%;
+            height: 85%;
+            background: rgba(255, 255, 255, 0.95);
+            border: 3px solid var(--secondary);
+            border-radius: 50px;
+            padding: 50px;
+            position: relative;
+            box-shadow: 0 30px 60px rgba(78, 205, 196, 0.3);
+            display: grid;
+            grid-template-columns: 1.5fr 2fr;
+            gap: 50px;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            font-size: 3rem;
+            cursor: pointer;
+            color: var(--primary);
+            background: none;
+            border: none;
+            font-weight: 800;
+            transition: 0.3s;
+        }
+        .close-btn:hover { transform: rotate(90deg) scale(1.2); }
+        
+        .video-placeholder {
+            background: linear-gradient(to bottom right, var(--accent), var(--primary));
+            border-radius: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.1);
+            color: white;
+            font-weight: 800;
+            font-size: 1.5rem;
+        }
+        
+        .lesson-details h2 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        .lesson-details p, .lesson-details li {
+            font-size: 1.2rem;
+            color: var(--text-light);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="animal-canvas"></canvas>
+    
+    <div class="lesson-overlay" id="overlay">
+        <div class="overlay-content">
+            <button class="close-btn" onclick="closeLesson()">&times;</button>
+            <div class="video-placeholder">
+                <div style="text-align: center">
+                    <span style="font-size: 4rem;">🎙️</span><br>
+                    Speaking Practice Arena
+                </div>
+            </div>
+            <div class="lesson-details">
+                <span class="lesson-tag" style="background: var(--primary)">SPEAKING PART 1-3</span>
+                <h2 id="modal-title">Lesson Title</h2>
+                <p>Bài học tập trung vào phản xạ Speaking tự nhiên. Hệ thống AI sẽ chấm điểm độ trôi chảy và từ vựng.</p>
+                <br>
+                <ul style="list-style: none;">
+                    <li style="margin-bottom: 15px; display: flex; align-items: center; font-weight: 700; color: var(--text-dark);">
+                        <span style="margin-right: 10px; color: var(--secondary); font-size: 1.5rem;">✨</span> Fluency Booster
+                    </li>
+                    <li style="margin-bottom: 15px; display: flex; align-items: center; font-weight: 700; color: var(--text-dark);">
+                         <span style="margin-right: 10px; color: var(--secondary); font-size: 1.5rem;">🗣️</span> Pronunciation Check
+                    </li>
+                    <li style="margin-bottom: 15px; display: flex; align-items: center; font-weight: 700; color: var(--text-dark);">
+                         <span style="margin-right: 10px; color: var(--secondary); font-size: 1.5rem;">💡</span> Advanced Vocabulary
+                    </li>
+                </ul>
+                <button class="btn-cute" style="margin-top: 30px; width: 100%;">Bắt đầu Nói ngay!</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>IELTS SPEAKING <br> WONDERLAND ✨</h1>
+            <p class="subtitle">Chinh phục kỹ năng Nói với 40 chủ đề siêu thú vị được chia thành 4 giai đoạn học tập!</p>
+            <button class="btn-cute" onclick="scrollToLessons()">Khám phá 40 Chủ đề 🚀</button>
+        </header>
+
+        <div class="lessons-section" id="lessons">
+            
+            <!-- SECTION 1: Beginner Foundation (1-10) -->
+            <div class="section-container section-1">
+                <div class="section-header">
+                    <div class="section-title">🌱 Giai đoạn 1: Nền tảng cơ bản</div>
+                    <p class="section-subtitle">Bài 1-10: Xây dựng nền tảng Speaking vững chắc</p>
+                </div>
+                <div class="lessons-grid" id="section-1-grid"></div>
+            </div>
+
+            <!-- SECTION 2: Intermediate Skills (11-20) -->
+            <div class="section-container section-2">
+                <div class="section-header">
+                    <div class="section-title">🚀 Giai đoạn 2: Phát triển kỹ năng</div>
+                    <p class="section-subtitle">Bài 11-20: Nâng cao khả năng diễn đạt</p>
+                </div>
+                <div class="lessons-grid" id="section-2-grid"></div>
+            </div>
+
+            <!-- SECTION 3: Advanced Fluency (21-30) -->
+            <div class="section-container section-3">
+                <div class="section-header">
+                    <div class="section-title">💎 Giai đoạn 3: Trôi chảy nâng cao</div>
+                    <p class="section-subtitle">Bài 21-30: Thành thạo các chủ đề phức tạp</p>
+                </div>
+                <div class="lessons-grid" id="section-3-grid"></div>
+            </div>
+
+            <!-- SECTION 4: Mastery Level (31-40) -->
+            <div class="section-container section-4">
+                <div class="section-header">
+                    <div class="section-title">👑 Giai đoạn 4: Trình độ chuyên nghiệp</div>
+                    <p class="section-subtitle">Bài 31-40: Hoàn thiện kỹ năng Speaking band 8.0+</p>
+                </div>
+                <div class="lessons-grid" id="section-4-grid"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // CANVAS ANIMATION
+        const canvas = document.getElementById('animal-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let animals = [];
+        
+        const animalImages = [
+            'https://cdn-icons-png.flaticon.com/512/616/616408.png',
+            'https://cdn-icons-png.flaticon.com/512/616/616430.png',
+            'https://cdn-icons-png.flaticon.com/512/616/616554.png',
+            'https://cdn-icons-png.flaticon.com/512/375/375112.png'
+        ];
+
+        class ChubbyAnimal {
+            constructor() {
+                this.img = new Image();
+                this.img.src = animalImages[Math.floor(Math.random() * animalImages.length)];
+                this.loaded = false;
+                this.img.onload = () => { this.loaded = true; };
+                this.size = Math.random() * 80 + 100;
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.8;
+                this.vy = (Math.random() - 0.5) * 0.8;
+                this.angle = 0;
+                this.spinSpeed = (Math.random() - 0.5) * 0.01;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.angle += this.spinSpeed;
+                if (this.x < -100 || this.x > width + 100) this.vx *= -1;
+                if (this.y < -100 || this.y > height + 100) this.vy *= -1;
+            }
+            draw() {
+                if (!this.loaded) return;
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle);
+                ctx.globalAlpha = 0.6;
+                ctx.drawImage(this.img, -this.size/2, -this.size/2, this.size, this.size);
+                ctx.restore();
+            }
+        }
+
+        function initCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            animals = [];
+            for(let i = 0; i < 8; i++) {
+                animals.push(new ChubbyAnimal());
+            }
+        }
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, width, height);
+            animals.forEach(animal => {
+                animal.update();
+                animal.draw();
+            });
+            requestAnimationFrame(animateCanvas);
+        }
+
+        initCanvas();
+        animateCanvas();
+        window.addEventListener('resize', initCanvas);
+
+        // LESSON DATA
+        const lessonData = {
+            section1: [
+                { icon: "👋", tag: "Introduction", title: "Self Introduction" },
+                { icon: "🏠", tag: "Daily Life", title: "Home & Family" },
+                { icon: "🎓", tag: "Education", title: "Study & Work" },
+                { icon: "🎨", tag: "Hobbies", title: "Interests & Pastimes" },
+                { icon: "🍕", tag: "Food", title: "Food & Cooking" },
+                { icon: "🌆", tag: "Places", title: "Hometown & Cities" },
+                { icon: "📱", tag: "Technology", title: "Daily Technology" },
+                { icon: "🚗", tag: "Transport", title: "Travel & Commute" },
+                { icon: "🌤️", tag: "Weather", title: "Climate & Seasons" },
+                { icon: "👕", tag: "Fashion", title: "Clothes & Style" }
+            ],
+            section2: [
+                { icon: "📚", tag: "Learning", title: "Books & Reading" },
+                { icon: "🎬", tag: "Entertainment", title: "Movies & TV" },
+                { icon: "🎵", tag: "Music", title: "Music & Concerts" },
+                { icon: "⚽", tag: "Sports", title: "Sports & Fitness" },
+                { icon: "🌍", tag: "Travel", title: "Travel & Tourism" },
+                { icon: "🏥", tag: "Health", title: "Health & Wellbeing" },
+                { icon: "🌳", tag: "Nature", title: "Environment & Nature" },
+                { icon: "🎉", tag: "Events", title: "Celebrations & Festivals" },
+                { icon: "👥", tag: "Relationships", title: "Friends & Social Life" },
+                { icon: "💼", tag: "Career", title: "Work & Profession" }
+            ],
+            section3: [
+                { icon: "💰", tag: "Economy", title: "Money & Finance" },
+                { icon: "🏛️", tag: "Culture", title: "Art & Culture" },
+                { icon: "🔬", tag: "Science", title: "Science & Innovation" },
+                { icon: "📰", tag: "Media", title: "News & Media" },
+                { icon: "🏢", tag: "Business", title: "Business & Marketing" },
+                { icon: "⚖️", tag: "Society", title: "Law & Justice" },
+                { icon: "🎓", tag: "Advanced Ed", title: "Higher Education" },
+                { icon: "🌐", tag: "Globalization", title: "Global Issues" },
+                { icon: "🤝", tag: "Ethics", title: "Ethics & Values" },
+                { icon: "🏘️", tag: "Urban", title: "City Planning" }
+            ],
+            section4: [
+                { icon: "🧠", tag: "Psychology", title: "Mind & Behavior" },
+                { icon: "🎯", tag: "Goals", title: "Ambition & Success" },
+                { icon: "🌟", tag: "Leadership", title: "Leadership Skills" },
+                { icon: "💡", tag: "Innovation", title: "Creativity & Ideas" },
+                { icon: "🌏", tag: "Diversity", title: "Cultural Diversity" },
+                { icon: "🔮", tag: "Future", title: "Future Trends" },
+                { icon: "🎭", tag: "Philosophy", title: "Life Philosophy" },
+                { icon: "🏆", tag: "Achievement", title: "Personal Growth" },
+                { icon: "🌈", tag: "Society", title: "Social Change" },
+                { icon: "👑", tag: "Mastery", title: "Expert Speaking" }
+            ]
+        };
+
+        // CREATE LESSONS FOR EACH SECTION
+        function createLessons(sectionData, gridId, startNum) {
+            const grid = document.getElementById(gridId);
+            sectionData.forEach((lesson, index) => {
+                const lessonNum = startNum + index;
+                const card = document.createElement('div');
+                card.classList.add('lesson-card');
+                card.innerHTML = `
+                    <div class="lesson-number">${lessonNum}</div>
+                    <div class="card-content">
+                        <div class="lesson-icon">${lesson.icon}</div>
+                        <div>
+                            <span class="lesson-tag">${lesson.tag}</span>
+                            <h3 class="lesson-title">Day ${lessonNum}:<br>${lesson.title}</h3>
+                        </div>
+                    </div>
+                `;
+                card.addEventListener('click', () => openLesson(lessonNum, `Day ${lessonNum}: ${lesson.title}`));
+                grid.appendChild(card);
+            });
+        }
+
+        createLessons(lessonData.section1, 'section-1-grid', 1);
+        createLessons(lessonData.section2, 'section-2-grid', 11);
+        createLessons(lessonData.section3, 'section-3-grid', 21);
+        createLessons(lessonData.section4, 'section-4-grid', 31);
+
+        // GSAP ANIMATIONS
+        gsap.from("h1", { y: -100, opacity: 0, duration: 1.5, ease: "elastic.out(1, 0.5)" });
+        gsap.from(".subtitle", { scale: 0.8, opacity: 0, duration: 1, delay: 0.5, ease: "back.out(2)" });
+        gsap.from("header .btn-cute", { y: 50, opacity: 0, duration: 1, delay: 0.8, ease: "elastic.out(1, 0.6)" });
+        
+        gsap.registerPlugin(ScrollTrigger);
+        gsap.utils.toArray('.section-container').forEach(section => {
+            gsap.from(section.querySelectorAll('.lesson-card'), {
+                scrollTrigger: { trigger: section, start: "top 85%" },
+                scale: 0.5, opacity: 0, duration: 1.2, stagger: 0.04, 
+                ease: "elastic.out(1, 0.5)", clearProps: "all"
+            });
+        });
+
+        // MODAL LOGIC
+        function scrollToLessons() {
+            document.getElementById('lessons').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        const overlay = document.getElementById('overlay');
+        const modalTitle = document.getElementById('modal-title');
+        const overlayContent = document.querySelector('.overlay-content');
+
+        function openLesson(id, title) {
+            modalTitle.innerText = title;
+            overlay.classList.add('active');
+            gsap.fromTo(overlayContent,
+                { scale: 0.7, opacity: 0 },
+                { scale: 1, opacity: 1, duration: 0.6, ease: "elastic.out(0.8, 0.6)" }
+            );
+        }
+
+        function closeLesson() {
+            gsap.to(overlayContent,
+                { scale: 0.8, opacity: 0, duration: 0.3, ease: "power2.in", onComplete: () => {
+                    overlay.classList.remove('active');
+                }}
+            );
+        }
+
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) closeLesson();
+        });
+    </script>
+</body>
+</html>
