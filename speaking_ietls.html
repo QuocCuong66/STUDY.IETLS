@@ -567,7 +567,41 @@
         });
     });
 
-    // --- 3. LOGIC MODAL & VIDEO DRIVE ---
+    // --- 3. LOGIC MODAL & VIDEO FULL MÀN HÌNH (DẠNG RẠP CHIẾU PHIM) ---
+    
+    // [TỰ ĐỘNG TẠO HTML & CSS CHO KHUNG FULL SCREEN]
+    // Đoạn này giúp bạn không cần sửa file HTML hay CSS thủ công
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.innerHTML = `
+        .fullscreen-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.9); z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+        }
+        .fullscreen-overlay.active { opacity: 1; pointer-events: all; }
+        .fullscreen-video-container {
+            width: 90%; height: 80%; background: #000; border-radius: 20px;
+            box-shadow: 0 0 50px rgba(255, 107, 107, 0.5); overflow: hidden; position: relative;
+        }
+        .close-fullscreen-btn {
+            position: absolute; top: 20px; right: 30px; color: white; font-size: 3rem;
+            background: none; border: none; cursor: pointer; font-weight: bold; z-index: 10000;
+        }
+        .close-fullscreen-btn:hover { color: #FF6B6B; transform: scale(1.2); }
+    `;
+    document.head.appendChild(fullscreenStyle);
+
+    const fullscreenHTML = `
+        <div class="fullscreen-overlay" id="fullscreen-overlay">
+            <button class="close-fullscreen-btn" onclick="closeFullscreenVideo()">&times;</button>
+            <div class="fullscreen-video-container" id="fullscreen-video-container"></div>
+        </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', fullscreenHTML);
+
+    // --- CÁC HÀM XỬ LÝ ---
+
     function scrollToLessons() {
         document.getElementById('lessons').scrollIntoView({ behavior: 'smooth' });
     }
@@ -575,22 +609,16 @@
     const overlay = document.getElementById('overlay');
     const modalTitle = document.getElementById('modal-title');
     const overlayContent = document.querySelector('.overlay-content');
-    const videoContainer = document.getElementById('video-container');
+    const videoContainer = document.getElementById('video-container'); // Khung nhỏ (nếu còn dùng)
 
-    // Nội dung mặc định (biểu tượng micro)
-    const defaultPlaceholder = `
-        <div style="text-align: center" id="placeholder-content">
-            <span style="font-size: 4rem;">🎙️</span><br>
-            Speaking Practice Arena
-        </div>
-    `;
+    // Các phần tử Fullscreen vừa tạo
+    const fullscreenOverlay = document.getElementById('fullscreen-overlay');
+    const fullscreenContainer = document.getElementById('fullscreen-video-container');
 
+    // Hàm mở bảng thông tin bài học (Popup nhỏ)
     function openLesson(id, data) {
         modalTitle.innerText = "Day " + id + ": " + data.title;
         currentVideoId = data.videoId;
-
-        // Reset về icon micro mỗi khi mở bài mới
-        videoContainer.innerHTML = defaultPlaceholder;
 
         overlay.classList.add('active');
         gsap.fromTo(overlayContent,
@@ -599,38 +627,64 @@
         );
     }
 
+    // Hàm đóng bảng thông tin
+    function closeLesson() {
+        gsap.to(overlayContent,
+            { scale: 0.8, opacity: 0, duration: 0.3, ease: "power2.in", onComplete: () => {
+                overlay.classList.remove('active');
+            }}
+        );
+    }
+
+    // --- HÀM QUAN TRỌNG: PHÁT VIDEO FULL MÀN HÌNH ---
     function playVideo() {
         if (!currentVideoId) {
             alert("Video đang được cập nhật!");
             return;
         }
 
-        // Chèn Iframe Google Drive Preview
-        // 'preview' giúp xem video ở chế độ "chỉ xem", sạch sẽ hơn
-        videoContainer.innerHTML = `
+        // 1. Chèn Iframe Google Drive vào khung Fullscreen
+        fullscreenContainer.innerHTML = `
             <iframe 
                 src="https://drive.google.com/file/d/${currentVideoId}/preview" 
                 width="100%" 
                 height="100%" 
-                style="border: none; border-radius: 35px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);"
+                style="border: none;"
                 allow="autoplay; fullscreen">
             </iframe>
         `;
-    }
 
-    function closeLesson() {
-        gsap.to(overlayContent,
-            { scale: 0.8, opacity: 0, duration: 0.3, ease: "power2.in", onComplete: () => {
-                overlay.classList.remove('active');
-                videoContainer.innerHTML = defaultPlaceholder; // Dừng video khi đóng
-            }}
+        // 2. Hiển thị lớp phủ
+        fullscreenOverlay.classList.add('active');
+
+        // 3. Hiệu ứng phóng to
+        gsap.fromTo(fullscreenContainer, 
+            { scale: 0.5, opacity: 0 }, 
+            { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.2)" }
         );
     }
 
+    // Hàm đóng video Full màn hình
+    function closeFullscreenVideo() {
+        gsap.to(fullscreenContainer, {
+            scale: 0.5, opacity: 0, duration: 0.3, ease: "power2.in",
+            onComplete: () => {
+                fullscreenOverlay.classList.remove('active');
+                fullscreenContainer.innerHTML = ""; // Xóa iframe để tắt tiếng
+            }
+        });
+    }
+
+    // Sự kiện Click ra ngoài để đóng
     overlay.addEventListener('click', (e) => {
         if (e.target === overlay) closeLesson();
     });
-</script>
+    
+    // Click vào vùng đen khi xem video thì tắt video
+    fullscreenOverlay.addEventListener('click', (e) => {
+        if (e.target === fullscreenOverlay) closeFullscreenVideo();
+    });
+    </script>
     <!--Start of Tawk.to Script-->
       <script type="text/javascript">
       var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
