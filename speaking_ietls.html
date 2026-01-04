@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -316,6 +317,132 @@
             font-size: 1.2rem;
             color: var(--text-light);
         }
+        /* CHATBOT STYLES */
+        .chat-widget {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .chat-button {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary), var(--purple));
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 30px;
+            border: 3px solid white;
+        }
+
+        .chat-button:hover { transform: scale(1.1) rotate(10deg); }
+
+        .chat-window {
+            position: absolute;
+            bottom: 85px;
+            right: 0;
+            width: 350px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 30px;
+            border: 3px solid var(--primary);
+            display: none; /* Ẩn mặc định */
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+        }
+
+        .chat-window.active { display: flex; animation: slideUp 0.4s ease forwards; }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chat-header {
+            background: var(--primary);
+            color: white;
+            padding: 12px;
+            font-weight: 800;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .chat-header span:last-child {
+            font-size: 2rem;       
+            cursor: pointer;
+            line-height: 1;        
+            transition: 0.3s;      
+            display: inline-block;
+        }
+
+        .chat-header span:last-child:hover {
+            transform: scale(1.2); 
+            color: var(--accent);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message {
+            padding: 12px 16px;
+            border-radius: 20px;
+            max-width: 80%;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .user-msg {
+            background: var(--secondary);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+
+        .ai-msg {
+            background: #f0f0f0;
+            color: var(--text-dark);
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+        }
+
+        .chat-input-area {
+            padding: 15px;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            border: 2px solid #eee;
+            padding: 10px 15px;
+            border-radius: 20px;
+            outline: none;
+            font-family: 'Nunito';
+        }
+
+        .chat-input-area button {
+            background: var(--primary);
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 15px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -399,6 +526,23 @@
             </div>
 
         </div>
+    </div>
+
+    <div class="chat-widget">
+        <div class="chat-window" id="chat-window">
+            <div class="chat-header">
+                <span>🤖 IELTS Tutor AI</span>
+                <span style="cursor:pointer" onclick="toggleChat()">×</span>
+            </div>
+            <div class="chat-messages" id="chat-messages">
+                <div class="message ai-msg">Xin chào! Mình là trợ lý IELTS. Bạn cần giúp gì về các bài học hôm nay không?</div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="chat-input" placeholder="Nhập câu hỏi...">
+                <button onclick="sendMessage()">Gửi</button>
+            </div>
+        </div>
+        <div class="chat-button" onclick="toggleChat()">💬</div>
     </div>
 
     <script>
@@ -684,18 +828,101 @@
         if (e.target === fullscreenOverlay) closeFullscreenVideo();
     });
     </script>
-    <!--Start of Tawk.to Script-->
-      <script type="text/javascript">
-      var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-      (function(){
-      var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-      s1.async=true;
-      s1.src='https://embed.tawk.to/69383d4a8465ad197f9bb913/1jc1qur94';
-      s1.charset='UTF-8';
-      s1.setAttribute('crossorigin','*');
-      s0.parentNode.insertBefore(s1,s0);
-      })();
-      </script>
-      <!--End of Tawk.to Script-->
+    // --- 1. CẤU HÌNH GOOGLE GEMINI API ---
+    <script>    
+    const GEMINI_API_KEY = "AlzaSyClCovZywRCZyMydsv9pPD2P_Pd2UTKzdU";
+
+    // --- 2. LOGIC ĐIỀU KHIỂN CHATBOT ---
+
+    // Hàm đóng/mở cửa sổ chat
+    function toggleChat() {
+        const chatWin = document.getElementById('chat-window');
+        const isActive = chatWin.classList.toggle('active');
+
+        if (isActive) {
+            // Hiệu ứng mở mượt mà bằng GSAP
+            gsap.fromTo(chatWin, 
+                { scale: 0.8, opacity: 0, y: 50 }, 
+                { scale: 1, opacity: 1, y: 0, duration: 0.4, ease: "back.out(1.7)" }
+            );
+            document.getElementById('chat-input').focus();
+        }
+    }
+
+    // Hàm gửi tin nhắn và nhận phản hồi từ AI
+    async function sendMessage() {
+        const input = document.getElementById('chat-input');
+        const container = document.getElementById('chat-messages');
+        const userText = input.value.trim();
+
+        // Kiểm tra nếu nội dung trống
+        if (!userText) return;
+
+        // 1. Hiển thị tin nhắn của Người dùng
+        const userDiv = document.createElement('div');
+        userDiv.className = 'message user-msg';
+        userDiv.innerText = userText;
+        container.appendChild(userDiv);
+
+        // Xóa nội dung input và cuộn xuống dưới
+        input.value = '';
+        container.scrollTop = container.scrollHeight;
+
+        // 2. Tạo tin nhắn chờ của AI
+        const loadingId = 'ai-loading-' + Date.now();
+        const aiDiv = document.createElement('div');
+        aiDiv.className = 'message ai-msg';
+        aiDiv.id = loadingId;
+        aiDiv.innerText = "Đang suy nghĩ...";
+        container.appendChild(aiDiv);
+        container.scrollTop = container.scrollHeight;
+
+        try {
+            // 3. Gọi API Google Gemini
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{ 
+                            text: `Bạn là trợ lý IELTS thân thiện trên website "IELTS Speaking Wonderland". Hãy trả lời ngắn gọn, súc tích và khích lệ người học bằng tiếng Việt: ${userText}` 
+                        }]
+                    }]
+                })
+            });
+
+            const data = await response.json();
+            
+            // Lấy văn bản trả về từ JSON
+            if (data.candidates && data.candidates[0].content) {
+                const aiText = data.candidates[0].content.parts[0].text;
+                document.getElementById(loadingId).innerText = aiText;
+            } else {
+                throw new Error("API Error");
+            }
+
+        } catch (error) {
+            console.error("Gemini Error:", error);
+            document.getElementById(loadingId).innerText = "Rất tiếc, mình đang bận một chút. Bạn thử lại sau nhé!";
+            document.getElementById(loadingId).style.color = "red";
+        }
+
+        // Luôn cuộn xuống tin nhắn mới nhất
+        container.scrollTop = container.scrollHeight;
+    }
+
+    // Lắng nghe sự kiện nhấn phím Enter trên ô nhập liệu
+    document.getElementById('chat-input').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    });
+
+    // --- 3. ĐẢM BẢO CÁC HÀM CŨ VẪN HOẠT ĐỘNG ---
+    function scrollToLessons() {
+        const section = document.getElementById('lessons');
+        if (section) section.scrollIntoView({ behavior: 'smooth' });
+    }
+    </script>
 </body>
 </html>
