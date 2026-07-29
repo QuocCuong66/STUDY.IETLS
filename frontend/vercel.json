@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "cleanUrls": true,
+  "routes": [
+    { "src": "/speaking", "dest": "/speaking_ietls.html" },
+    { "src": "/login", "dest": "/index.html" }
+  ]
+}

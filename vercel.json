@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "public": true,
+  "builds": [
+    { "src": "frontend/**", "use": "@vercel/static" }
+  ],
+  "routes": [
+    { "src": "/", "dest": "/frontend/index.html" },
+    { "src": "/speaking_ietls.html", "dest": "/frontend/speaking_ietls.html" },
+    { "src": "/(.*)", "dest": "/frontend/$1" }
+  ]
+}
