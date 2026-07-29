@@ -42,6 +42,14 @@ class LoginResponse(BaseModel):
     message: str
     username: Optional[str] = None
 
+class RegisterRequest(BaseModel):
+    username: str
+    password: str
+
+class RegisterResponse(BaseModel):
+    success: bool
+    message: str
+
 # Sample Valid Users
 VALID_USERS = {
     "lengocvananh": "181007",
@@ -81,6 +89,21 @@ def login(credentials: LoginRequest):
             success=False,
             message="Tài khoản hoặc mật khẩu không chính xác!"
         )
+
+@app.post("/api/register", response_model=RegisterResponse)
+def register(credentials: RegisterRequest):
+    username = credentials.username.strip()
+    password = credentials.password.strip()
+
+    if not username or not password:
+        return RegisterResponse(success=False, message="Tài khoản và mật khẩu không được để trống!")
+
+    if username in VALID_USERS:
+        return RegisterResponse(success=False, message="Tài khoản đã tồn tại! Vui lòng chọn tên khác.")
+
+    VALID_USERS[username] = password
+    return RegisterResponse(success=True, message="Đăng ký tài khoản thành công! Bạn có thể đăng nhập ngay.")
+
 
 @app.post("/api/chat", response_model=ChatResponse)
 async def chat_with_ai(request: ChatRequest):
