@@ -1,8 +1,24 @@
+:root {
+    /* Palette Màu Chính */
+    --primary: #FF6B6B;       /* Đỏ Coral / Hồng Nổi Bật */
+    --secondary: #4ECDC4;     /* Xanh Ngọc Mint */
+    --accent: #FFE66D;        /* Vàng Nắng Nổi Bật */
+    --purple: #A29BFE;        /* Tím Pastel */
+
+    /* Typography / Màu Chữ */
+    --text-dark: #2d3436;      /* Đen Than / Chữ Chính */
+    --text-light: #636e72;     /* Xám Ghi / Chữ Phụ */
+
+    /* Glassmorphism Effect Tokens */
+    --glass-bg: rgba(255, 255, 255, 0.4);       /* Nền kính mờ */
+    --glass-border: rgba(255, 255, 255, 0.8);   /* Viền kính mờ */
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Poppins', 'Nunito', sans-serif;
 }
 
 body {
