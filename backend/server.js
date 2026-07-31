@@ -8,9 +8,9 @@ const app = express();
 // Render sẽ tự động cấp một PORT ngẫu nhiên qua process.env.PORT
 const PORT = process.env.PORT || 5000;
 
-// 2. Cấu hình CORS cho phép Vercel frontend truy cập
+// 2. Cấu hình CORS cho phép Vercel frontend & Render truy cập từ mọi origin
 app.use(cors({
-  origin: ['https://study-ietls.vercel.app', 'http://localhost:3000', 'http://127.0.0.1:5500'],
+  origin: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true

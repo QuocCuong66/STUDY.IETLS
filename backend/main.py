@@ -15,19 +15,21 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Enable CORS for Vercel Frontend and local testing
+# Enable CORS for Vercel Frontend, Render, and local testing
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://study-ietls.vercel.app",
-        "http://localhost:3000",
-        "http://127.0.0.1:5500",
-        "*"
-    ],
+    allow_origins=["*"],
+    allow_origin_regex=r"https?://.*",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"]
 )
+
+@app.options("/{full_path:path}")
+async def options_handler(full_path: str):
+    return {"status": "ok"}
+
 
 # Request & Response Models
 class ChatRequest(BaseModel):
@@ -119,11 +121,13 @@ async def chat_with_ai(request: ChatRequest):
             detail="Tin nhắn không được để trống"
         )
     
+    env_path = os.path.join(os.path.dirname(__file__), ".env")
+    load_dotenv(dotenv_path=env_path, override=True)
     load_dotenv(override=True)
     openai_key = os.getenv("OPENAI_API_KEY", "").strip()
     gemini_key = os.getenv("GEMINI_API_KEY", "").strip()
     openai_model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
-    gemini_model = os.getenv("GEMINI_MODEL", "gemini-1.5-flash")
+    gemini_model = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
 
     system_prompt = "Bạn là trợ lý IELTS thân thiện trên website 'IELTS Speaking Wonderland'. Hãy trả lời ngắn gọn, súc tích và khích lệ người học bằng tiếng Việt."
 
