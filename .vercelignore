@@ -1,0 +1,11 @@
+# Vercel Ignore File
+# Ignore backend files so Vercel does NOT treat this repo as a Python Serverless app
+backend/
+main.py
+requirements.txt
+Procfile
+render.yaml
+*.py
+__pycache__/
+.env
+.env.example
