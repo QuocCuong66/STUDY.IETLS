@@ -1,22 +1,11 @@
 {
-  "version": 2,
   "cleanUrls": true,
-  "builds": [
-    {
-      "src": "frontend/**",
-      "use": "@vercel/static"
-    }
-  ],
-  "routes": [
-    { "src": "/favicon.ico", "dest": "/frontend/favicon.ico" },
-    { "src": "/css/(.*)", "dest": "/frontend/css/$1" },
-    { "src": "/js/(.*)", "dest": "/frontend/js/$1" },
-    { "src": "/speaking", "dest": "/frontend/speaking_ietls.html" },
-    { "src": "/speaking_ietls(\\.html)?", "dest": "/frontend/speaking_ietls.html" },
-    { "src": "/login", "dest": "/frontend/index.html" },
-    { "src": "/index(\\.html)?", "dest": "/frontend/index.html" },
-    { "src": "/", "dest": "/frontend/index.html" },
-    { "src": "/frontend/(.*)", "dest": "/frontend/$1" },
-    { "src": "/(.*)", "dest": "/frontend/$1" }
+  "rewrites": [
+    { "source": "/login", "destination": "/index.html" },
+    { "source": "/speaking", "destination": "/speaking_ietls.html" },
+    { "source": "/frontend/login", "destination": "/index.html" },
+    { "source": "/frontend/speaking", "destination": "/speaking_ietls.html" },
+    { "source": "/frontend/speaking_ietls", "destination": "/speaking_ietls.html" },
+    { "source": "/frontend", "destination": "/index.html" }
   ]
 }
