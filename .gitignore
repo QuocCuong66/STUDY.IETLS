@@ -1,23 +1,5 @@
-# Environment variables
-.env
-*.env
-backend/.env
-backend/*.env
-
-# Python
+test_results/
+*.log
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
 .pytest_cache/
-venv/
-env/
-
-# IDE & OS
-.vscode/
-.idea/
-.DS_Store
-Thumbs.db
-
-# Node dependencies (if any)
-node_modules/
+.env
