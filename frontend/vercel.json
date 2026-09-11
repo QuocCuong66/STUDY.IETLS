@@ -1,8 +1,0 @@
-{
-  "rewrites": [
-    { "source": "/", "destination": "/index.html" },
-    { "source": "/login", "destination": "/index.html" },
-    { "source": "/speaking", "destination": "/speaking_ietls.html" },
-    { "source": "/speaking_ietls", "destination": "/speaking_ietls.html" }
-  ]
-}
