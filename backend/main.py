@@ -185,5 +185,5 @@ async def chat_with_ai(request: ChatRequest):
         # If both fail or no key works
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Không thể kết nối đến AI Chatbot Service. Vui lòng kiểm tra lại API key trong .env!"
+            detail="Không thể kết nối đến AI Chatbot Service. Vui lòng kiểm tra lại OPENAI_API_KEY hoặc GEMINI_API_KEY trong file .env!"
         )
