@@ -1,11 +1,8 @@
 {
-  "cleanUrls": true,
   "rewrites": [
+    { "source": "/", "destination": "/index.html" },
     { "source": "/login", "destination": "/index.html" },
     { "source": "/speaking", "destination": "/speaking_ietls.html" },
-    { "source": "/frontend/login", "destination": "/index.html" },
-    { "source": "/frontend/speaking", "destination": "/speaking_ietls.html" },
-    { "source": "/frontend/speaking_ietls", "destination": "/speaking_ietls.html" },
-    { "source": "/frontend", "destination": "/index.html" }
+    { "source": "/speaking_ietls", "destination": "/speaking_ietls.html" }
   ]
 }

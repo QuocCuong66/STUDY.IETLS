@@ -1,13 +1,8 @@
 {
-  "version": 2,
-  "cleanUrls": true,
-  "routes": [
-    { "src": "/favicon.ico", "dest": "/favicon.ico" },
-    { "src": "/login", "dest": "/index.html" },
-    { "src": "/index(\\.html)?", "dest": "/index.html" },
-    { "src": "/speaking", "dest": "/speaking_ietls.html" },
-    { "src": "/speaking_ietls(\\.html)?", "dest": "/speaking_ietls.html" },
-    { "src": "/", "dest": "/index.html" },
-    { "src": "/(.*)", "dest": "/$1" }
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/login", "destination": "/index.html" },
+    { "source": "/speaking", "destination": "/speaking_ietls.html" },
+    { "source": "/speaking_ietls", "destination": "/speaking_ietls.html" }
   ]
 }
