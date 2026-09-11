@@ -1,11 +1,15 @@
 {
   "version": 2,
-  "builds": [
-    { "src": "frontend/**", "use": "@vercel/static" }
-  ],
+  "cleanUrls": true,
   "routes": [
-    { "src": "/", "dest": "/frontend/index.html" },
-    { "src": "/speaking_ietls.html", "dest": "/frontend/speaking_ietls.html" },
-    { "src": "/(.*)", "dest": "/frontend/$1" }
+    { "src": "^/$", "dest": "/frontend/index.html" },
+    { "src": "^/login$", "dest": "/frontend/index.html" },
+    { "src": "^/index(\\.html)?$", "dest": "/frontend/index.html" },
+    { "src": "^/speaking$", "dest": "/frontend/speaking_ietls.html" },
+    { "src": "^/speaking_ietls(\\.html)?$", "dest": "/frontend/speaking_ietls.html" },
+    { "src": "^/css/(.*)", "dest": "/frontend/css/$1" },
+    { "src": "^/js/(.*)", "dest": "/frontend/js/$1" },
+    { "src": "^/frontend/(.*)", "dest": "/frontend/$1" },
+    { "src": "^/(.*)", "dest": "/frontend/$1" }
   ]
 }

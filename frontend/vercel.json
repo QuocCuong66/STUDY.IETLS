@@ -2,7 +2,11 @@
   "version": 2,
   "cleanUrls": true,
   "routes": [
-    { "src": "/speaking", "dest": "/speaking_ietls.html" },
-    { "src": "/login", "dest": "/index.html" }
+    { "src": "^/$", "dest": "/index.html" },
+    { "src": "^/login$", "dest": "/index.html" },
+    { "src": "^/index(\\.html)?$", "dest": "/index.html" },
+    { "src": "^/speaking$", "dest": "/speaking_ietls.html" },
+    { "src": "^/speaking_ietls(\\.html)?$", "dest": "/speaking_ietls.html" },
+    { "src": "^/(.*)", "dest": "/$1" }
   ]
 }
