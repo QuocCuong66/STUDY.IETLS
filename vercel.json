@@ -1,4 +1,6 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
   "rewrites": [
     { "source": "/speaking", "destination": "/speaking_ietls.html" },
     { "source": "/login", "destination": "/index.html" }
