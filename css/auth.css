@@ -144,3 +144,34 @@ body {
   opacity: 0.6;
   cursor: wait;
 }
+
+.div1 .divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 15px 0;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.div1 .divider::before,
+.div1 .divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.div1 .btn-google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #fff;
+  color: #3c4043;
+}
+
+.div1 .btn-google i {
+  font-size: 22px;
+  color: #4285F4;
+}

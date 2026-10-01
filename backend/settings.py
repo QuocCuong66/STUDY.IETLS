@@ -16,9 +16,10 @@ OPENAI_MODEL = _env("OPENAI_MODEL", "gpt-4o-mini")
 GEMINI_API_KEY = _env("GEMINI_API_KEY")
 GEMINI_MODEL = _env("GEMINI_MODEL", "gemini-2.5-flash")
 
-# Firebase: JSON content of the service account key (production),
-# or leave empty and set GOOGLE_APPLICATION_CREDENTIALS to the key file path (local).
+# Firebase service account: JSON content in an env var (production),
+# or the key file next to this module (local, gitignored)
 FIREBASE_SERVICE_ACCOUNT = _env("FIREBASE_SERVICE_ACCOUNT")
+FIREBASE_KEY_FILE = Path(__file__).parent / "firebase-service-account.json"
 
 # Session cookie
 SESSION_COOKIE_NAME = "session"

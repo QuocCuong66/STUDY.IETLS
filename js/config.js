@@ -7,10 +7,10 @@ const CONFIG = {
 
     // Firebase Console → Project settings → General → Your apps → SDK setup and configuration
     FIREBASE: {
-        apiKey: "YOUR_API_KEY",
-        authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-        projectId: "YOUR_PROJECT_ID",
-        appId: "YOUR_APP_ID"
+        apiKey: "AIzaSyCa7Q4bXbx-TH74ibInrl_uc9a-IyC-ufQ",
+        authDomain: "study-ce4fa.firebaseapp.com",
+        projectId: "study-ce4fa",
+        appId: "1:285060171147:web:39a96797315e6be8489b8e"
     },
 
     LOGIN_PAGE: 'index.html',

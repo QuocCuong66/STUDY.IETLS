@@ -22,8 +22,12 @@ def _firebase_app() -> firebase_admin.App:
     except ValueError:
         pass
     try:
-        cred = (credentials.Certificate(json.loads(settings.FIREBASE_SERVICE_ACCOUNT))
-                if settings.FIREBASE_SERVICE_ACCOUNT else None)
+        if settings.FIREBASE_SERVICE_ACCOUNT:
+            cred = credentials.Certificate(json.loads(settings.FIREBASE_SERVICE_ACCOUNT))
+        elif settings.FIREBASE_KEY_FILE.exists():
+            cred = credentials.Certificate(str(settings.FIREBASE_KEY_FILE))
+        else:
+            cred = None  # Falls back to GOOGLE_APPLICATION_CREDENTIALS
         return firebase_admin.initialize_app(cred)
     except Exception as e:
         print(f"Firebase init error: {e}")
