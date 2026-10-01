@@ -14,6 +14,8 @@ router = APIRouter(prefix="/api", tags=["auth"])
 
 # An ID token may only be exchanged for a session cookie shortly after sign-in
 MAX_AUTH_AGE_SECONDS = 5 * 60
+# Tolerates the server clock running slightly behind Google's ("Token used too early")
+CLOCK_SKEW_SECONDS = 10
 
 
 def _load_credential() -> Optional[credentials.Certificate]:
@@ -59,10 +61,12 @@ def current_user(request: Request) -> UserInfo:
     if not cookie:
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Bạn chưa đăng nhập")
     try:
-        claims = fb_auth.verify_session_cookie(cookie, check_revoked=True, app=_firebase_app())
+        claims = fb_auth.verify_session_cookie(cookie, check_revoked=True, app=_firebase_app(),
+                                               clock_skew_seconds=CLOCK_SKEW_SECONDS)
     except HTTPException:
         raise
-    except Exception:
+    except Exception as e:
+        print(f"Session cookie rejected: {e}")
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Phiên đăng nhập đã hết hạn")
     return UserInfo(uid=claims["uid"], email=claims.get("email"), name=claims.get("name"))
 
@@ -71,8 +75,9 @@ def current_user(request: Request) -> UserInfo:
 def create_session(body: SessionRequest, response: Response):
     app = _firebase_app()
     try:
-        claims = fb_auth.verify_id_token(body.idToken, app=app)
-    except Exception:
+        claims = fb_auth.verify_id_token(body.idToken, app=app, clock_skew_seconds=CLOCK_SKEW_SECONDS)
+    except Exception as e:
+        print(f"ID token rejected: {e}")
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Token đăng nhập không hợp lệ")
     if time.time() - claims["auth_time"] > MAX_AUTH_AGE_SECONDS:
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Vui lòng đăng nhập lại")
