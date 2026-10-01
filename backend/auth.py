@@ -1,4 +1,5 @@
 import json
+import os
 import time
 from datetime import timedelta
 from typing import Optional
@@ -30,7 +31,10 @@ def _load_credential() -> Optional[credentials.Certificate]:
     key_file = next((f for f in settings.FIREBASE_KEY_FILES if f.exists()), None)
     if key_file:
         return credentials.Certificate(str(key_file))
-    return None  # Falls back to GOOGLE_APPLICATION_CREDENTIALS
+    if os.getenv("GOOGLE_APPLICATION_CREDENTIALS"):
+        return None  # firebase_admin loads it itself
+    raise ValueError("No Firebase key found: set FIREBASE_SERVICE_ACCOUNT or add a key file at "
+                     + " or ".join(str(f) for f in settings.FIREBASE_KEY_FILES))
 
 
 def _firebase_app() -> firebase_admin.App:
