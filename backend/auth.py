@@ -16,19 +16,28 @@ router = APIRouter(prefix="/api", tags=["auth"])
 MAX_AUTH_AGE_SECONDS = 5 * 60
 
 
+def _load_credential() -> Optional[credentials.Certificate]:
+    raw = settings.FIREBASE_SERVICE_ACCOUNT
+    if raw:
+        try:
+            return credentials.Certificate(json.loads(raw))
+        except json.JSONDecodeError:
+            # Never log the value itself: it is a private key
+            raise ValueError(f"FIREBASE_SERVICE_ACCOUNT is not valid JSON "
+                             f"(starts with {raw[:1]!r}, length {len(raw)}); paste the whole key file content")
+    key_file = next((f for f in settings.FIREBASE_KEY_FILES if f.exists()), None)
+    if key_file:
+        return credentials.Certificate(str(key_file))
+    return None  # Falls back to GOOGLE_APPLICATION_CREDENTIALS
+
+
 def _firebase_app() -> firebase_admin.App:
     try:
         return firebase_admin.get_app()
     except ValueError:
         pass
     try:
-        if settings.FIREBASE_SERVICE_ACCOUNT:
-            cred = credentials.Certificate(json.loads(settings.FIREBASE_SERVICE_ACCOUNT))
-        elif settings.FIREBASE_KEY_FILE.exists():
-            cred = credentials.Certificate(str(settings.FIREBASE_KEY_FILE))
-        else:
-            cred = None  # Falls back to GOOGLE_APPLICATION_CREDENTIALS
-        return firebase_admin.initialize_app(cred)
+        return firebase_admin.initialize_app(_load_credential())
     except Exception as e:
         print(f"Firebase init error: {e}")
         raise HTTPException(status.HTTP_503_SERVICE_UNAVAILABLE, "Máy chủ chưa cấu hình Firebase")
