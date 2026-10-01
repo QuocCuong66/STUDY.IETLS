@@ -15,11 +15,11 @@
     <div class="div1">
         <!-- LOGIN FORM -->
         <div id="login-box">
-            <form onsubmit="login(event)">
+            <form id="login-form">
                 <h1>ĐĂNG NHẬP</h1>
                 <div class="input-box">
-                    <input type="text" id="username" placeholder="Tài khoản" required autocomplete="username">
-                    <i class="bx bxs-user"></i>
+                    <input type="email" id="email" placeholder="Email" required autocomplete="email">
+                    <i class="bx bxs-envelope"></i>
                 </div>
                 <div class="input-box">
                     <input type="password" id="password" placeholder="Mật khẩu" required
@@ -27,41 +27,42 @@
                     <i class="bx bxs-lock-alt"></i>
                 </div>
                 <div class="remember-forgot">
-                    <label><input type="checkbox">Nhớ mật khẩu</label>
-                    <a href="#"
-                        onclick="alert('Vui lòng liên hệ giảng viên hoặc quản trị viên để lấy lại mật khẩu!')">Quên mật
-                        khẩu?</a>
+                    <label><input type="checkbox" id="remember">Ghi nhớ đăng nhập</label>
+                    <a href="#" id="forgot-password">Quên mật khẩu?</a>
                 </div>
                 <button type="submit" class="btn">ĐĂNG NHẬP</button>
                 <div class="register">
-                    <p>CHƯA CÓ TÀI KHOẢN? <a href="javascript:void(0)" onclick="showRegisterForm()">Đăng ký ngay</a></p>
+                    <p>CHƯA CÓ TÀI KHOẢN? <a href="#" id="show-register">Đăng ký ngay</a></p>
                 </div>
             </form>
         </div>
 
         <!-- REGISTER FORM -->
-        <div id="register-box" style="display: none;">
-            <form onsubmit="register(event)">
+        <div id="register-box" hidden>
+            <form id="register-form">
                 <h1>TẠO TÀI KHOẢN</h1>
                 <div class="input-box">
-                    <input type="text" id="reg-username" placeholder="Tên tài khoản mới" required
-                        autocomplete="username">
+                    <input type="text" id="reg-name" placeholder="Họ và tên" required autocomplete="name">
                     <i class="bx bxs-user-plus"></i>
                 </div>
                 <div class="input-box">
-                    <input type="password" id="reg-password" placeholder="Mật khẩu" required
-                        autocomplete="new-password">
+                    <input type="email" id="reg-email" placeholder="Email" required autocomplete="email">
+                    <i class="bx bxs-envelope"></i>
+                </div>
+                <div class="input-box">
+                    <input type="password" id="reg-password" placeholder="Mật khẩu (tối thiểu 6 ký tự)" required
+                        minlength="6" autocomplete="new-password">
                     <i class="bx bxs-lock-alt"></i>
                 </div>
                 <div class="input-box">
                     <input type="password" id="reg-confirm-password" placeholder="Xác nhận mật khẩu" required
-                        autocomplete="new-password">
+                        minlength="6" autocomplete="new-password">
                     <i class="bx bxs-check-shield"></i>
                 </div>
                 <button type="submit" class="btn" style="background: linear-gradient(45deg, #4ECDC4, #FF6B6B);">TẠO TÀI
                     KHOẢN</button>
                 <div class="register">
-                    <p>ĐÃ CÓ TÀI KHOẢN? <a href="javascript:void(0)" onclick="showLoginForm()">Đăng nhập ngay</a></p>
+                    <p>ĐÃ CÓ TÀI KHOẢN? <a href="#" id="show-login">Đăng nhập ngay</a></p>
                 </div>
             </form>
         </div>
@@ -69,7 +70,7 @@
 
     <!-- Application Scripts -->
     <script src="js/config.js"></script>
-    <script src="js/auth.js"></script>
+    <script type="module" src="js/auth.js"></script>
 </body>
 
 </html>

@@ -36,39 +36,23 @@ async function sendMessage() {
     container.scrollTop = container.scrollHeight;
 
     // 2. Render Loading State
-    const loadingId = 'ai-loading-' + Date.now();
     const aiDiv = document.createElement('div');
     aiDiv.className = 'message ai-msg';
-    aiDiv.id = loadingId;
     aiDiv.innerText = "Đang suy nghĩ...";
     container.appendChild(aiDiv);
     container.scrollTop = container.scrollHeight;
 
+    // 3. Call Backend FastAPI Chatbot Endpoint
     try {
-        // 3. Call Backend FastAPI Chatbot Endpoint
-        const response = await fetch(`${CONFIG.API_BASE_URL}/api/chat`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: userText })
-        });
-
-        const data = await response.json();
-        const loadingElement = document.getElementById(loadingId);
-
-        if (response.ok && data.response) {
-            loadingElement.innerText = data.response;
-        } else {
-            const errorText = data.detail || "Rất tiếc, AI không thể phản hồi lúc này.";
-            loadingElement.innerText = errorText;
-            loadingElement.style.color = "red";
-        }
+        const data = await api('/api/chat', { method: 'POST', body: { message: userText } });
+        aiDiv.innerText = data.response;
     } catch (error) {
         console.error("Chatbot API Error:", error);
-        const loadingElement = document.getElementById(loadingId);
-        if (loadingElement) {
-            loadingElement.innerText = "Lỗi kết nối Server Backend! Vui lòng kiểm tra lại.";
-            loadingElement.style.color = "red";
-        }
+        if (error.status === 401) return Session.redirectToLogin();
+        aiDiv.innerText = error.status
+            ? error.message
+            : "Lỗi kết nối Server Backend! Vui lòng kiểm tra lại.";
+        aiDiv.style.color = "red";
     }
 
     container.scrollTop = container.scrollHeight;

@@ -21,3 +21,6 @@ Thumbs.db
 
 # Node dependencies (if any)
 node_modules/
+
+# Firebase service account keys
+*service-account*.json

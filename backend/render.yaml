@@ -13,3 +13,5 @@ services:
         value: gemini-2.5-flash
       - key: OPENAI_MODEL
         value: gpt-4o-mini
+      - key: FIREBASE_SERVICE_ACCOUNT
+        sync: false

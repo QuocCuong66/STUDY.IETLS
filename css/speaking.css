@@ -467,3 +467,30 @@ p.subtitle {
     background: none; border: none; cursor: pointer; font-weight: bold; z-index: 10000;
 }
 .close-fullscreen-btn:hover { color: #FF6B6B; transform: scale(1.2); }
+
+/* Signed-in User Bar */
+.user-bar {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 8px 8px 16px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 999px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.user-bar button {
+    border: none;
+    border-radius: 999px;
+    padding: 6px 14px;
+    background: var(--primary);
+    color: #fff;
+    font: inherit;
+    cursor: pointer;
+}

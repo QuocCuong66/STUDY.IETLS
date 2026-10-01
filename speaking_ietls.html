@@ -52,6 +52,12 @@
         <div class="fullscreen-video-container" id="fullscreen-video-container"></div>
     </div>
 
+    <!-- Signed-in User Bar -->
+    <div class="user-bar">
+        <span>👋 <span id="user-name"></span></span>
+        <button onclick="Session.logout()">Đăng xuất</button>
+    </div>
+
     <!-- Main Container -->
     <div class="container">
         <header>
@@ -119,6 +125,7 @@
 
     <!-- Application Scripts -->
     <script src="js/config.js"></script>
+    <script src="js/session.js"></script>
     <script src="js/chat.js"></script>
     <script src="js/speaking.js"></script>
 </body>
