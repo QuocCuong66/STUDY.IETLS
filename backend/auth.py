@@ -25,9 +25,9 @@ def _load_credential() -> Optional[credentials.Certificate]:
         try:
             return credentials.Certificate(json.loads(raw))
         except json.JSONDecodeError:
-            # Never log the value itself: it is a private key
-            raise ValueError(f"FIREBASE_SERVICE_ACCOUNT is not valid JSON "
-                             f"(starts with {raw[:1]!r}, length {len(raw)}); paste the whole key file content")
+            # Never log the value itself: it is a private key. Fall through to the key files.
+            print(f"Warning: FIREBASE_SERVICE_ACCOUNT is not valid JSON (starts with {raw[:1]!r}, "
+                  f"length {len(raw)}); it must be the whole key file content. Trying key files instead.")
     key_file = next((f for f in settings.FIREBASE_KEY_FILES if f.exists()), None)
     if key_file:
         return credentials.Certificate(str(key_file))
