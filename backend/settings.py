@@ -12,7 +12,7 @@ def _env(key: str, default: str = "") -> str:
 
 # AI providers
 OPENAI_API_KEY = _env("OPENAI_API_KEY")
-OPENAI_MODEL = _env("OPENAI_MODEL", "gpt-4o-mini")
+OPENAI_MODEL = _env("OPENAI_MODEL", "gpt-6-luna")
 GEMINI_API_KEY = _env("GEMINI_API_KEY")
 GEMINI_MODEL = _env("GEMINI_MODEL", "gemini-2.5-flash")
 

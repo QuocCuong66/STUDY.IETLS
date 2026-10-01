@@ -35,7 +35,6 @@ async def _ask_openai(client: httpx.AsyncClient, message: str) -> Optional[str]:
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": message},
             ],
-            "temperature": 0.7,
         },
     )
     res.raise_for_status()
